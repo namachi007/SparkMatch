@@ -1,0 +1,21 @@
+{
+  "name": "tinder-clone",
+  "version": "1.0.0",
+  "description": "Our Tinder clone is a modern dating and social networking platform designed to help users connect effortlessly.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "react"
+  ],
+  "author": "Namasivayam",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "node": "^23.7.0"
+  }
+}
