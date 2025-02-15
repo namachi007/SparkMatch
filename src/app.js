@@ -21,6 +21,53 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+
+
+app.get("/user", async(req, res) =>{
+  const userEmail = req.body.emailId;
+  try {
+    console.log(userEmail);
+    const user = await User.find({emailId: userEmail});
+    res.send(user);
+  } 
+  catch (err) {
+    console.log("Something went wrong");
+  }
+});
+
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    await User.findByIdAndDelete(userId);
+    res.send("The user is deleted successfully");
+  } catch (err) {
+    console.log("Something went wrong");
+  }
+});
+
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, req.body);
+    res.send("The user profile is updated successfuly");
+  } catch (err) {
+    console.log("Something went wrong");
+  }
+});
+
+
+app.get("/feed", async (req,res) => {
+  
+
+  try {
+    const users = await User.find();
+    res.send(users);
+  }
+  catch(err) {
+    console.log("Something went wrong");
+    }
+})
+
 const connectDB = require("./config/database");
 
 connectDB()
