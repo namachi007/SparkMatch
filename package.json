@@ -19,6 +19,7 @@
     "express": "^4.21.2",
     "mongoose": "^8.10.0",
     "mongoose-unique-validator": "^4.0.1",
-    "node": "^23.7.0"
+    "node": "^23.7.0",
+    "validator": "^13.12.0"
   }
 }

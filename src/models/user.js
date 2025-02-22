@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { type } = require("os");
 const uniqueValidator = require("mongoose-unique-validator");
+var validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,6 +10,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       minLength: 3,
       maxlength: 30,
+     
     },
     lastName: {
       type: String,
@@ -19,11 +21,24 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true
+      trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is not valid");
+        }
+      }
     },
     password: {
       type: String,
       required: true,
+      validate(value) {
+        if (value.toLowerCase().includes("password")) {
+          throw new Error("Password should not contain 'password'");
+        }
+        if (!validator.isStrongPassword(value)) {
+          throw new Error("Password is not strong enough");
+        }
+      },
     },
     age: {
       type: Number,
@@ -42,13 +57,28 @@ const userSchema = new mongoose.Schema(
     about: {
       type: String,
       default: "Default about",
+      validate(value) {
+        if (value.length > 150) {
+          throw new Error("About should be less than 150 characters");
+        }
+      },
     },
     photoUrl: {
       type: String,
       default: "https://openclipart.org/image/800px/247320",
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Photo URL is not valid");
+        }
+      },
     },
     skills: {
       type: [String],
+      validate(value) {
+        if (value.length > 20) {
+          throw new Error("Skills should be less than 20");
+        }
+      },
     },
   },
   {
