@@ -18,6 +18,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.10.0",
+    "mongoose-unique-validator": "^4.0.1",
     "node": "^23.7.0"
   }
 }

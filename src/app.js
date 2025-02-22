@@ -17,7 +17,11 @@ app.post("/signup", async (req, res) => {
     await user.save();
     res.send("The user profile is successfully created");
   } catch (err) {
-    res.status(400).send("Error saving the user: ", err);
+    if (err.code === 11000) {
+      res.status(400).send("Email already existed");
+    } else {
+      res.status(400).send("Error saving the user: " + err.message);
+    }
   }
 });
 
@@ -45,10 +49,31 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?.userId;
+
+  const data = req.body;
   try {
-    await User.findByIdAndUpdate({ _id: userId }, req.body);
+    
+  const Allowed_updates = [
+    "firstName",
+    "lastName",
+    "skills",
+    "password",
+    "age",
+    "about",
+    "photoUrl",
+  ];
+
+  const updates = Object.keys(data).every((k) => Allowed_updates.includes(k));
+
+  if(!updates) {
+    throw new Error("Invalid updates");
+  }
+  if(data?.skills.length >20) {
+    throw new Error("Skills length should be less than 20");
+  }
+    await User.findByIdAndUpdate({ _id: userId }, data,{runValidators: true});
     res.send("The user profile is updated successfuly");
   } catch (err) {
     console.log("Something went wrong");
@@ -81,19 +106,4 @@ connectDB()
     console.log("The database is not connected", err);
   });
 
-// const {adminAuth} = require("./middlewares/auth");
 
-// app.use("/user", adminAuth);
-
-// app.get("/user/:userId", (req, res) => {
-//   const userId = req.params.userId;
-//   res.send(`fetching user with ID : ${userId}`);
-// });
-
-// app.post("/user", (req, res) => {
-//   res.send("User profile is successfully updated!");
-// });
-
-// app.delete("/user", (req, res) => {
-//   res.send("User profile is deleted");
-// });
